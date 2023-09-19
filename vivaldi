@@ -1,4 +1,4 @@
-#! /usr/bin/sh
+#! /usr/bin/zsh
 
 APP_NAME="net.vivaldi.Vivaldi"
 APP_FOLDER="$XDG_RUNTIME_DIR/app/$APP_NAME"
@@ -7,6 +7,8 @@ mkdir -p "$APP_FOLDER"
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
   export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 fi
+
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 # A sandboxed dbus filter that 
 # makes things a little safer
