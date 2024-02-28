@@ -1,4 +1,4 @@
-#! /usr/bin/zsh
+#! /usr/bin/env bash
 
 APP_NAME="host.local.Neomutt"
 APP_FOLDER="$XDG_RUNTIME_DIR/app/$APP_NAME"
@@ -8,7 +8,7 @@ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
   export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 fi
 
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+trap 'trap - SIGTERM && kill -- -$$' SIGINT SIGTERM EXIT
 
 # A sandboxed dbus filter that 
 # makes things a little safer
@@ -41,7 +41,6 @@ run_app() {
   bwrap \
     --unshare-all \
     --share-net \
-    --new-session \
     --symlink /usr/lib /lib \
     --symlink /usr/lib64 /lib64 \
     --symlink /usr/bin /bin \
@@ -60,6 +59,9 @@ run_app() {
     --bind "$APP_FOLDER/bus" "$XDG_RUNTIME_DIR/bus" \
     --bind "$HOME/Mail" "$HOME/Mail" \
     --bind "$HOME/.mail" "$HOME/.mail" \
+    --bind "$HOME/.mutt" "$HOME/.mutt" \
+    --bind "$HOME/.config/nvim" "$HOME/.config/nvim" \
+    --bind "$HOME/.local/share/nvim" "$HOME/.local/share/nvim" \
     --ro-bind "$HOME/.mailcap" "$HOME/.mailcap" \
     --ro-bind "$HOME/.neomuttrc" "$HOME/.neomuttrc" \
     --ro-bind "$HOME/.gnupg" "$HOME/.gnupg" \
@@ -68,8 +70,7 @@ run_app() {
     --ro-bind "$HOME"/.icons "$HOME"/.icons \
     --ro-bind-data 3 "/.flatpak-info" \
     --setenv XCURSOR_PATH "/run/host/user-share/icons:/run/host/share/icons:$HOME/.icons" \
-    --setenv GTK_USE_PORTAL 1 \
-    --cap-drop ALL \
+    --setenv EDITOR "nvim" \
     -- \
     /usr/bin/neomutt \
     3<<EOF
