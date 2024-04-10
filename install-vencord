@@ -23,6 +23,3 @@ bwrap \
   --bind "$HOME/.local/share/flatpak/app/com.discordapp.Discord" "$HOME/.local/share/flatpak/app/com.discordapp.Discord" \
   -- \
   bash -c "wget https://github.com/Vendicated/VencordInstaller/releases/latest/download/VencordInstallerCli-Linux && chmod +x VencordInstallerCli-Linux && ./VencordInstallerCli-Linux"
-
-
-run_app
